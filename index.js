@@ -1,55 +1,54 @@
 let btnEl = document.getElementById("push");
-  let inputEl = document.getElementById("newinput");
-  let taskList = document.querySelector(".tasks");
+let inputEl = document.getElementById("newinput");
+let taskList = document.querySelector(".tasks");
 
-  function addTask() {
+function addTask() {
     if (inputEl.value === ""){
-      alert("Please Enter a Task");
-    } 
-    else{
+        alert("Please Enter a Task");
+    } else {
+        // Kreiranje novog zadatka i dodavanje u listu
         let newTask = document.createElement("li");
         newTask.innerHTML = `<div class="task">
-                              <span id="task-name">${inputEl.value}</span>
-                              <button class="btn-delete"> <i class="far fa-trash-alt"></i> </button>
-                          </div>`;
+                                <div class="container-left"> 
+                                    <span class="task-name">${(inputEl.value).trim()}</span>
+                                </div>
+                                <div class="container-right">
+                                    <button class="btn-delete"> <i class="far fa-trash-alt"></i> </button>
+                                    <button class="btn-edit"> <i class="far fa-edit"></i> </button>
+                                </div>
+                            </div>`;
         taskList.appendChild(newTask);
+
         inputEl.value = ""; 
 
-        let btnDelete = newTask.querySelectorAll(".btn-delete");
-             btnDelete.forEach(btn => {
-             btn.addEventListener('click', () => {
-             newTask.remove(); 
-             });
+        // Funkcionalnost brisanja zadatka
+        let btnDelete = newTask.querySelector(".btn-delete");
+        btnDelete.addEventListener('click', () => {
+            newTask.remove(); 
         });
 
-        /////////////////////////////////////////////////////////
-        ////dodavanje line strike
+        // Funkcionalnost prekrižavanja zadatka (obavljen)
+        let taskName = newTask.querySelector(".task-name");
+        taskName.addEventListener('click', () => {
+            taskName.classList.toggle('completed');
+        });
 
-        let tasks = document.querySelectorAll(".task");
-            for (let i=0; i<tasks.length;i++){
-                tasks[i].onclick = function(){
-                    this.classList.toggle('completed')
-                }
-            }
-
-        if(tasks.length%3==0){
-            let quote = document.createElement("p");
-            quote.classList.add("quote");
-            let quoteContainer = document.getElementById("quote-container");
-            quote.classList.add("quote");
-            quote.innerText ="Work for it! Never give up"
-            quoteContainer.appendChild(quote)
-        }
+        // Funkcionalnosti uređivanja zadatka
+        let btnEdit = newTask.querySelector(".btn-edit");
+        btnEdit.addEventListener('click', () => {
+            let taskText = taskName.innerText.trim();
+            inputEl.value = taskText; 
+            inputEl.focus(); 
+            newTask.remove(); 
+        });
     }
-  }
+}
 
-  btnEl.addEventListener('click', addTask);
+btnEl.addEventListener('click', addTask);
 
-  inputEl.addEventListener('keypress', (event) => {
+// dodavanje zadatka na pritisak tipke Enter
+inputEl.addEventListener('keypress', (event) => {
     if (event.key === 'Enter') {
-      addTask();
+        addTask();
     }
-  });
-
-
-
+});
